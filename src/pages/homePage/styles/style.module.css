@@ -1,0 +1,101 @@
+.mainDivContainer {
+  display: flex;
+  gap: 20px;
+  margin-top: 0px;
+}
+
+.leftContainer {
+  width: 336px;
+  height: 100vh;
+
+  background-color: rgb(240, 242, 246);
+}
+.leftSubContainer {
+  padding: 70px 20px;
+  /* margin-bottom: 30px; */
+}
+.middleDiv {
+  border-bottom: 1px solid rgb(207, 205, 205);
+}
+.upperDiv {
+  display: flex;
+  /* flex-direction: column; */
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.upperDiv button {
+  background-color: white;
+  padding: 15px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+
+  border: 1px solid rgb(168, 173, 179);
+}
+.upperDiv button:hover {
+  border: 1px solid red;
+  color: red;
+}
+
+.lowerDiv button {
+  background-color: white;
+  padding: 15px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid rgb(168, 173, 179);
+}
+
+.lowerDiv button:hover {
+  border: 1px solid red;
+  color: red;
+}
+
+
+.RightContainer{
+    width: 75%;
+    display: flex;
+    justify-content: center;
+    /* margin: 150px; */
+
+}
+.formDetails{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    margin: 120px;
+    
+}
+.inputfieldDiv{
+    padding: 15px ;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(170, 168, 168);
+    border-radius: 10px;;
+    gap: 15px
+}
+.inputfieldDiv label{
+    font-size: 12px;
+}
+.inputfieldDiv input{
+    background-color: rgb(240, 242, 246);
+        border: 1px solid white;
+        padding: 15px 10px;
+        border-radius: 10px;
+}
+.formDetails h1{
+    font-size: 45px;
+}
+.SubmitButton{
+    background-color: white;
+    padding: 15px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 29px;
+    border: 1px solid rgb(236, 241, 248);
+   }
+   .SubmitButton:hover{
+
+    border: 1px solid red;
+    color: red;
+   }

@@ -1,0 +1,60 @@
+.DivMainContainer{
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    }
+    .DivSubContainer{
+        width: 49%;
+        margin: 130px 0px;
+        display: flex;
+    flex-direction: column;
+    gap: 20px;
+    }
+    .DivSubContainer h1{
+    font-size: 43px;
+    
+    }
+    .FormGroup{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+    .InputField{
+        width: 100%;
+        position: relative;
+        background-color: rgb(240, 242, 246);
+        border: 1px solid white;
+        padding: 15px 10px;
+        border-radius: 10px;
+    }
+    .InputField:hover{
+        border:1px solid red;
+
+    }
+  
+   .InputPasswordWrapper{
+   position: relative;
+    width: 100%;
+   }
+   .PasswordToggleIcon{
+    position: absolute;
+    right: 0%;
+    bottom: 12px;
+    cursor: pointer;
+   }
+   .SubmitButton{
+    background-color: white;
+    padding: 15px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid rgb(236, 241, 248);
+   }
+   .SubmitButton:hover{
+
+    border: 1px solid red;
+   }
+   .ErrorText{
+    margin-top: -10px;
+    color: red;
+   }

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';  // Eye icons from react-icons
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 import styles from './styles/style.module.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const SignUpPage = () => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -10,9 +12,17 @@ const SignUpPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigatetoHome = useNavigate()
-  const onSubmit = (data) => {
-    console.log(data); 
-    navigatetoHome("/homePage")
+  const onSubmit = async(data) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/signup', data);
+      console.log('Signup success:', response.data);
+      localStorage.setItem('token', response.data.token);
+      navigatetoHome("/homePage"); 
+    } catch (error) {
+      alert(error.response.data.error, 'Signup failed')
+     
+    }
+
   };
 
   const password = watch('password');
@@ -30,12 +40,14 @@ const SignUpPage = () => {
 
   const navigate = useNavigate()
   function navigateToLogin(){
+    localStorage.removeItem("userSignUp")
     return navigate("/")
   }
 
   return (
     <div className={styles.DivMainContainer}>
       <form className={styles.DivSubContainer} onSubmit={handleSubmit(onSubmit)}>
+      <h1>Sign Up</h1>
         <div className={styles.FormGroup}>
           <label>First Name</label>
           <input 

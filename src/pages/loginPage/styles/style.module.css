@@ -25,7 +25,7 @@
         position: relative;
         background-color: rgb(240, 242, 246);
         border: 1px solid white;
-        padding: 15px 10px;
+        padding: 13px 10px;
         border-radius: 10px;
     }
     .InputField:hover{
@@ -39,7 +39,7 @@
    }
    .PasswordToggleIcon{
     position: absolute;
-    right: 0%;
+    right: 2%;
     bottom: 12px;
     cursor: pointer;
    }

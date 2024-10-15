@@ -11,8 +11,25 @@
     gap: 20px;
     }
     .DivSubContainer h1{
-    font-size: 43px;
-    
+        font-size: 2.75rem;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    color: rgb(49, 51, 63)
+
+    }
+    .DivSubContainer h2{
+        margin-top: 0px;
+        font-size: 2.25rem;
+        /* font-family: "Source Sans Pro", sans-serif; */
+        font-weight: 600;
+        color: rgb(49, 51, 63);
+        margin-bottom: 0px;
+    }
+    .PasswordToggleIcon{
+      position: absolute;
+      bottom: 27%;
+      right: 2%;
+      cursor: pointer;
     }
     .FormGroup{
         display: flex;
@@ -20,38 +37,147 @@
         gap: 10px;
         width: 100%;
     }
-    .InputField{
+    .FormGroup5{
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        gap: 10px;
         width: 100%;
+    }
+    .FormGroup4{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+    .FormGroup4 label{
+        word-break: break-word;
+        margin-bottom: 0px;
+        font-size: 14px;
+      }
+
+
+      .uploadContainer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #f5f7fa;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e2e5e9;
+      }
+      
+      .dragDrop {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #7a7d84;
+      }
+      .dragDrop2 {
+        display: flex;
+        /* flex-direction: column; */
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        color: #7a7d84;
+      }
+      
+      .browseFiles {
+        background-color: white;
+        color: #7a7d84;
+        border: 1px solid #e2e5e9;
+        border-radius: 10px;
+        padding: 13px 19px;
+        cursor: pointer;
+      }
+      .browseFiles:hover{
+        border: 1px solid red;
+     color: red;
+      }
+      
+      .inputField3 {
+        display: none; 
+      }
+      
+
+
+
+    .formContainer2{
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    }
+    .InputField{
+      width: 100%;
         position: relative;
         background-color: rgb(236, 241, 248);
         border: 1px solid white;
-        padding: 15px 10px;
+        padding: 13px 10px;
         border-radius: 10px;
     }
     .InputField:hover{
         border:1px solid red;
 
     }
-  
+    .FormGroup label{
+    word-break: break-word;
+    margin-bottom: 0px;
+    font-size: 14px;
+  }
+  .FormGroup1 {
+
+    cursor: pointer;
+  }
+  .FormGroup1 input{
+   
+    cursor: pointer;
+  }
+  .InputField1{
+    background-color: rgb(236, 241, 248);
+    border: 1px solid white;
+    padding: 15px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
    .InputPasswordWrapper{
    position: relative;
     width: 100%;
    }
-   .PasswordToggleIcon{
+   .absoluteMaxLength{
     position: absolute;
-    right: 0%;
-    bottom: 12px;
-    cursor: pointer;
+    right: 2%;
+    bottom: 5px;
+    font-size: 12px;
+   }
+   .dragDrop span{
+    color: black;
+   }
+   .dragDrop{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+   }
+   .dragDrop p{
+  margin-top: 0px;
+  margin-bottom: 0px;
+   }
+   .btnForm1{
+    display: flex;
+    gap: 38%;
+
    }
    .SubmitButton{
     background-color: white;
-    padding: 15px 10px;
+    padding: 13px 19px;
     border-radius: 10px;
     cursor: pointer;
     border: 1px solid rgb(236, 241, 248);
    }
+   
+  
    .SubmitButton:hover{
-
     border: 1px solid red;
    }
    .ErrorText{

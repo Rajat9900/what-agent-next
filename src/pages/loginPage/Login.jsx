@@ -1,18 +1,26 @@
-import React from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './styles/style.module.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 
 const Login = () => {
   const { register, handleSubmit,  formState: { errors } } = useForm();
   const [showPassword, setShowPassword] = useState(false);
 
   const navigatetoHome = useNavigate()
-  const onSubmit = (data) => {
-    console.log(data);
-    navigatetoHome("/homePage")
+
+  const onSubmit = async(data) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/login', data); 
+      localStorage.setItem('token', response.data.token);
+      navigatetoHome('/homePage');  
+    } catch (error) {
+     alert(error.response?.data?.error || 'Login failed');
+    }
+ 
   };
   const navigate = useNavigate()
   const naviagteToSignUp = () =>{

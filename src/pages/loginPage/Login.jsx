@@ -14,7 +14,7 @@ const Login = () => {
 
   const onSubmit = async(data) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/login', data); 
+      const response = await axios.post('http://16.171.95.6:5001/login', data); 
       localStorage.setItem('token', response.data.token);
       navigatetoHome('/homePage');  
     } catch (error) {

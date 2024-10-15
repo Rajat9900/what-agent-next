@@ -14,7 +14,8 @@ const SignUpPage = () => {
   const navigatetoHome = useNavigate()
   const onSubmit = async(data) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/signup', data);
+      delete data['confirmPassword']
+      const response = await axios.post('http://16.171.95.6:5001/signup', data);
       console.log('Signup success:', response.data);
       localStorage.setItem('token', response.data.token);
       navigatetoHome("/homePage"); 
@@ -52,20 +53,20 @@ const SignUpPage = () => {
           <label>First Name</label>
           <input 
             type="text" 
-            {...register('firstName', { required: 'First Name is required' })} 
+            {...register('first_name', { required: 'First Name is required' })} 
             className={styles.InputField} 
           />
-          {errors.firstName && <p className={styles.ErrorText}>{errors.firstName.message}</p>}
+          {errors.first_name && <p className={styles.ErrorText}>{errors.first_name.message}</p>}
         </div>
 
         <div className={styles.FormGroup}>
           <label>Last Name</label>
           <input 
             type="text" 
-            {...register('lastName', { required: 'Last Name is required' })} 
+            {...register('last_name', { required: 'Last Name is required' })} 
             className={styles.InputField} 
           />
-          {errors.lastName && <p className={styles.ErrorText}>{errors.lastName.message}</p>}
+          {errors.last_name && <p className={styles.ErrorText}>{errors.last_name.message}</p>}
         </div>
 
         <div className={styles.FormGroup}>

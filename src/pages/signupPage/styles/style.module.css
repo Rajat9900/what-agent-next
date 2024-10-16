@@ -184,3 +184,36 @@
     margin-top: -10px;
     color: red;
    }
+
+   @media screen and (max-width: 828px) {
+    .DivSubContainer{
+  width: 68%
+    }
+   }
+   @media screen and (max-width: 680px) {
+    .DivSubContainer{
+  width: 68%
+    }
+    
+   }
+   @media screen and (max-width: 600px) {
+   .uploadContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .DivSubContainer h1{
+    font-size: 2.30rem;
+  }
+  .DivSubContainer h2{
+    font-size: 2.0rem;
+  }
+}
+@media screen and (max-width: 600px){
+  .btnForm1{
+    display: flex;
+   flex-direction: column;
+   gap: 15px;
+  }
+}

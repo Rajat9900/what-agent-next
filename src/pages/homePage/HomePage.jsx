@@ -104,7 +104,9 @@ navigatetoLogin('/')
         </form>
 
         {/* Three Dots Menu */}
-        <div className={styles.threeDotsMainDiv}>
+     
+      </div>
+      <div className={styles.threeDotsMainDiv}>
           <BsThreeDotsVertical onClick={() => setSmShow(!smShow)} />
           
           {smShow && (
@@ -119,7 +121,6 @@ navigatetoLogin('/')
             </div>
           )}
         </div>
-      </div>
     </div>
   );
 };

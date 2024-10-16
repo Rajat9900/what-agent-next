@@ -1,7 +1,8 @@
 .mainDivContainer {
   display: flex;
 justify-content: space-between;
-  gap: 20px;
+height: 100vh;
+  gap: 5px;
   margin-top: 0px;
   transition: all 0.3s ease;
 }
@@ -9,28 +10,27 @@ justify-content: space-between;
 opacity: none;
 }
 .leftContainer {
-  width: 336px;
-  height: 100vh;
-
+  width: 23%;
   background-color: rgb(240, 242, 246);
   position: relative;
   transition: width 0.3s ease; 
 }
 .leftSubContainer {
+
   padding: 70px 20px;
-  transition: opacity 0.3s ease; /* Smooth transition for content fading */
+  transition: opacity 0.3s ease; 
   opacity: 1;
   /* margin-bottom: 30px; */
 }
 .leftContainerClosed .leftSubContainer {
-  opacity: 0; /* Hide content when closed */
-  pointer-events: none; /* Disable interaction with hidden content */
+  opacity: 0; 
+  pointer-events: none; 
 }
 .leftContainerClosed {
   width: 40px; /* Width when closed */
 }
 .RightContainer{
-  width: 75%;
+width: 55%;
   display: flex;
   justify-content: center;
   transition: width 0.3s ease;
@@ -85,7 +85,9 @@ opacity: none;
 .leftContNewChat{
   /* padding: 0px 10px; */
   display: flex;
-  gap: 30%;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
   /* justify-content: ; */
 }
 
@@ -122,7 +124,7 @@ opacity: none;
 
 
 .formDetails{
-    width: 70%;
+    width: 100%;
     display: flex;
     flex-direction: column;
 
@@ -235,3 +237,71 @@ color: black;
   .customDropdown ul li:hover {
     background-color: #f0f0f0;
   }
+
+  @media screen and (max-width: 1020px) {
+  .RightContainer{
+width: 73%;
+  }
+  .leftContNewChat{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+      }
+      .upperDiv button{
+        width: 100%;
+      }
+      .lowerDiv button{
+        width: 100%;
+      }
+  }
+  @media screen and (max-width: 806px) {
+    .leftContainer{
+      width: 36%;
+    }
+    
+  .leftContainerClosed{
+    width: 40px;
+  }
+  .formDetails h1 {
+    font-size: 37px;
+}
+}
+  @media screen and (max-width: 680px) {
+    
+    .leftContNewChat{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+    }
+    .formDetails h1 {
+      font-size: 34px;
+     }
+   
+   }
+   @media screen and (max-width: 575px) {
+    .RightContainer{
+      width: 55%
+        }
+        .formDetails{
+          width: 100%;
+        }
+   .formDetails h1 {
+    font-size: 25px;
+   }
+  
+  }
+
+  @media screen and (max-width: 375px) {
+.leftContainer{
+    width: 56%;
+  }
+  .formDetails h1 {
+    font-size: 21px;
+}
+.leftContainerClosed{
+  width: 40px;
+}
+.RightContainer{
+  width: 52%
+    }
+}

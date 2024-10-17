@@ -11,13 +11,14 @@ opacity: none;
 }
 .leftContainer {
   width: 23%;
-  background-color: rgb(240, 242, 246);
+  /* background-color: rgb(240, 242, 246); */
   position: relative;
   transition: width 0.3s ease; 
 }
 .leftSubContainer {
-
+  background-color: rgb(240, 242, 246);
   padding: 70px 20px;
+  height: 100vh;
   transition: opacity 0.3s ease; 
   opacity: 1;
   /* margin-bottom: 30px; */
@@ -27,10 +28,10 @@ opacity: none;
   pointer-events: none; 
 }
 .leftContainerClosed {
-  width: 40px; /* Width when closed */
+  width: 40px; 
 }
 .RightContainer{
-width: 55%;
+width: 61%;
   display: flex;
   justify-content: center;
   transition: width 0.3s ease;
@@ -48,7 +49,7 @@ width: 55%;
   top: 5%;
   
   padding: 1px;
-  right: 15px;
+  right: 9px;
   border-radius: 3px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -190,6 +191,7 @@ color: black;
 }
 .formDetails h1{
     font-size: 45px;
+    font-weight: 600;
 }
 .SubmitButton{
     background-color: white;
@@ -208,6 +210,7 @@ color: black;
    .threeDotsMainDiv {
     position: relative; 
     margin-top: 30px;
+    margin-right: 20px;
     cursor: pointer;
   }
   
@@ -264,6 +267,7 @@ width: 73%;
   }
   .formDetails h1 {
     font-size: 37px;
+
 }
 }
   @media screen and (max-width: 680px) {

@@ -15,7 +15,7 @@ const SignUpPage = () => {
   const onSubmit = async(data) => {
     try {
       delete data['confirmPassword']
-      const response = await axios.post('http://16.171.95.6:5001/signup', data);
+      const response = await axios.post('https://backendsharebrain.whatagent.net/signup', data);
       console.log('Signup success:', response.data);
       localStorage.setItem('token', response.data.token);
       navigatetoHome("/homePage"); 

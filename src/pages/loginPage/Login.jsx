@@ -14,7 +14,7 @@ const Login = () => {
 
   const onSubmit = async(data) => {
     try {
-      const response = await axios.post('http://16.171.95.6:5001/login', data); 
+      const response = await axios.post('https://backendsharebrain.whatagent.net/login', data); 
       localStorage.setItem('token', response.data.token);
       navigatetoHome('/homePage');  
     } catch (error) {

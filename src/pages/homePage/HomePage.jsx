@@ -1,61 +1,131 @@
-import React, { useState, useEffect, useRef } from "react";
-import styles from "./styles/style.module.css";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import Cookies from 'js-cookie';
+import { MdDeleteOutline } from "react-icons/md";
+import { getAllChats, sendMessageToChat, createNewChat } from "../../services";
+import styles from "./styles/style.module.css";
 
 const HomePage = () => {
   const [thinkingSubmit, setThinkingSubmit] = useState(false);
   const [smShow, setSmShow] = useState(false);
-  const [thinkingDiv, setThinkingDiv] = useState(false);
   const [isLeftContainerOpen, setIsLeftContainerOpen] = useState(true);
-  const dropdownRef = useRef(null);  // To reference the dropdown element
-
-  const toggleLeftContainer = () => {
-    setIsLeftContainerOpen(!isLeftContainerOpen);
-  };
-  
+  const [chats, setChats] = useState([]);
+  const [currentSessionId, setCurrentSessionId] = useState(null);
+  const [inputMessage, setInputMessage] = useState("");
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
-  const navigateToQAApp = () => {
-    navigate("/qaApp");
+  useEffect(() => {
+    const fetchChatsHistory = async () => {
+      try {
+        const response = await getAllChats(token);
+        if (response.status === 200) {
+          setChats(response.data.chats);
+        }
+      } catch (error) {
+        console.error("Error fetching chat history:", error);
+      }
+    };
+
+    fetchChatsHistory();
+  }, [token]);
+
+  const handleNewChat = async () => {
+    try {
+      const response = await createNewChat({}, token);
+      if (response.status === 201) {
+        const newChatIndex = chats.length + 1;
+        const newChat = {
+          session_id: response.data.session_id,
+          label: `New Chat ${newChatIndex}`,
+          messages: [],
+        };
+
+        setChats((prevChats) => [newChat, ...prevChats]);
+        setCurrentSessionId(response.data.session_id);
+      }
+    } catch (error) {
+      console.error("Error creating new chat:", error);
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSendMessage = async () => {
+    if (!currentSessionId || inputMessage.trim() === "") return;
     setThinkingSubmit(true);
-    setThinkingDiv(true);
+
+    try {
+      const response = await sendMessageToChat(
+        currentSessionId,
+        inputMessage,
+        token
+      );
+
+      if (response.status === 200) {
+        setThinkingSubmit(true);
+        setChats((prevChats) =>
+          prevChats.map((chat) =>
+            chat.session_id === currentSessionId
+              ? {
+                  ...chat,
+                  messages: [
+                    ...chat.messages,
+                    {
+                      user_message: inputMessage,
+                      ai_response: response.data.answer,
+                      timestamp: new Date().toISOString(),
+                    },
+                  ],
+                }
+              : chat
+          )
+        );
+        setInputMessage("");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    } finally {
+      setThinkingSubmit(false);
+    }
+  };
+
+  const deleteChat = (sessionId) => {
+    setChats(chats.filter((chat) => chat.session_id !== sessionId));
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setSmShow(false); 
+        setSmShow(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownRef]);
 
-  const navigatetoLogin = useNavigate()
+  const toggleLeftContainer = () => {
+    setIsLeftContainerOpen(!isLeftContainerOpen);
+  };
 
-const handleLogout  = () =>{
-  localStorage.removeItem('token');
-navigatetoLogin('/')
-}
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
 
-const createNewchat=()=>{
-  
-}
+  const currentChat = chats.find(
+    (chat) => chat.session_id === currentSessionId
+  );
 
   return (
     <div className={styles.mainDivContainer}>
-      <div className={`${styles.leftContainer} ${!isLeftContainerOpen ? styles.leftContainerClosed : ''}`}>
+      <div
+        className={`${styles.leftContainer} ${
+          !isLeftContainerOpen ? styles.leftContainerClosed : ""
+        }`}
+      >
         <div className={styles.leftSubContainer}>
           <div>
             <p>Logged in as Ranjana</p>
@@ -63,17 +133,31 @@ const createNewchat=()=>{
           <div className={styles.upperDiv}>
             <div onClick={handleLogout}>
               <button>Logout</button>
-            </div>{" "}
+            </div>
             <br />
             <div className={styles.leftContNewChat}>
-              <button onClick={createNewchat}>New Chat</button>
-              <button onClick={navigateToQAApp}>Create Topic</button>
+              <button onClick={handleNewChat}>New Chat</button>
+              <button onClick={() => navigate("/qaApp")}>Create Topic</button>
             </div>
           </div>
           <div className={styles.middleDiv}></div>
           <div className={styles.lowerDiv}>
             <h3>Chats</h3>
-            <button>New Chat 1</button>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            >
+              {chats.map((chat) => (
+                <div key={chat.session_id} className={styles.newChatCreatedDiv}>
+                  <button onClick={() => setCurrentSessionId(chat.session_id)}>
+                    {chat.label}
+                  </button>
+                  <MdDeleteOutline
+                    onClick={() => deleteChat(chat.session_id)}
+                    style={{ fontSize: "24px" }}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <div className={styles.toggleIcon} onClick={toggleLeftContainer}>
@@ -82,48 +166,67 @@ const createNewchat=()=>{
       </div>
 
       <div className={styles.RightContainer}>
-        <form className={styles.formDetails} onSubmit={handleSubmit}>
+        <form
+          className={styles.formDetails}
+          onSubmit={(e) => e.preventDefault()}
+        >
           <h1>AskAI Q/A App</h1>
-          {thinkingSubmit && <p>🤔 Thinking....</p>}{" "}
+          {thinkingSubmit && <p>🤔 Thinking....</p>}
           <div className={styles.inputfieldDiv}>
             <label>Ask any question:</label>
-            <input type="text" />
+            <input
+              type="text"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+            />
             <div>
-              <button className={styles.SubmitButton} type="submit">
+              <button
+                className={styles.SubmitButton}
+                onClick={handleSendMessage}
+                type="submit"
+              >
                 Submit
               </button>
             </div>
           </div>
-          {thinkingDiv && (
+          {currentChat && (
             <div className={styles.formDetails1}>
-              <div className={styles.inputfieldDiv1}>
-                <p><strong>You:</strong> Today's weather</p>
-              </div>
-              <div className={styles.inputfieldDiv2}>
-                <p><strong>AI:</strong> I don't have real-time data access or the ability to check current weather conditions. However, I recommend using a reliable weather website or app like Weather.com, BBC Weather, or a local news station's website to get the most up-to-date information about today's weather.</p>
-              </div>
+              {currentChat.messages.map((message, index) => (
+                <div key={index} className={styles.formDetails1}>
+                  <div className={styles.inputfieldDiv1}>
+                    <p>
+                      <strong>You:</strong> {message.user_message}
+                    </p>
+                  </div>
+                  <div className={styles.inputfieldDiv2}>
+                    <p>
+                      <strong>AI:</strong> {message.ai_response}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </form>
 
         {/* Three Dots Menu */}
-     
       </div>
       <div className={styles.threeDotsMainDiv}>
-          <BsThreeDotsVertical onClick={() => setSmShow(!smShow)} />
-          
-          {smShow && (
-            <div ref={dropdownRef} className={styles.customDropdown}>
-              <ul>
-                <li>Rerun</li>
-                <li>Settings</li><hr/>
-                <li>Print</li>
-                <li>Record a screencast</li><hr/>
-                <li>About</li>
-              </ul>
-            </div>
-          )}
-        </div>
+        <BsThreeDotsVertical onClick={() => setSmShow(!smShow)} />
+        {smShow && (
+          <div ref={dropdownRef} className={styles.customDropdown}>
+            <ul>
+              <li>Rerun</li>
+              <li>Settings</li>
+              <hr />
+              <li>Print</li>
+              <li>Record a screencast</li>
+              <hr />
+              <li>About</li>
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

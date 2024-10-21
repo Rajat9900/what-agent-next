@@ -15,7 +15,8 @@ const Login = () => {
   const onSubmit = async(data) => {
     try {
       const response = await axios.post('https://backendsharebrain.whatagent.net/login', data); 
-      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('token', response.data.access_token);
+      console.log(response.data.access_token, "response token of Login")
       navigatetoHome('/homePage');  
     } catch (error) {
      alert(error.response?.data?.error || 'Login failed');

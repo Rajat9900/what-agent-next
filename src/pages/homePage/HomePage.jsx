@@ -36,7 +36,7 @@ const HomePage = () => {
     try {
       const response = await createNewChat({}, token);
       if (response.status === 201) {
-        const newChatIndex = chats.length + 1;
+        // const newChatIndex = chats.length + 1;
         const newChat = {
           session_id: response.data.session_id,
           label: response.data.label,

@@ -29,3 +29,13 @@ export const createNewChat = (payload, token) => {
     },
   });
 };
+export const createNewTopics = (payload, token) => {
+  return axios.post(api_url + "topics", payload, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+};
+export const getPublicTopics = () => {
+    return axios.get(`${api_url}topics/public`);
+  };

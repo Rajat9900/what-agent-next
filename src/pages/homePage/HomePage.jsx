@@ -39,7 +39,7 @@ const HomePage = () => {
         const newChatIndex = chats.length + 1;
         const newChat = {
           session_id: response.data.session_id,
-          label: `New Chat ${newChatIndex}`,
+          label: response.data.label,
           messages: [],
         };
 
@@ -128,7 +128,7 @@ const HomePage = () => {
       >
         <div className={styles.leftSubContainer}>
           <div>
-            <p>Logged in as Ranjana</p>
+            {/* <p>Logged in as Ranjana</p> */}
           </div>
           <div className={styles.upperDiv}>
             <div onClick={handleLogout}>
@@ -151,10 +151,10 @@ const HomePage = () => {
                   <button onClick={() => setCurrentSessionId(chat.session_id)}>
                     {chat.label}
                   </button>
-                  <MdDeleteOutline
+                  {/* <MdDeleteOutline
                     onClick={() => deleteChat(chat.session_id)}
                     style={{ fontSize: "24px" }}
-                  />
+                  /> */}
                 </div>
               ))}
             </div>

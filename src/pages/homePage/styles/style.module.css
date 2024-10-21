@@ -11,7 +11,7 @@ opacity: none;
 }
 .leftContainer {
   width: 23%;
-  
+  background-color: rgb(240, 242, 246);
   position: relative;
   transition: width 0.3s ease; 
 }
@@ -196,6 +196,7 @@ color: black;
     padding: 10px 15px;
     border-radius: 10px;
     cursor: pointer;
+    color: black;
     font-family: 29px;
     border: 1px solid rgb(236, 241, 248);
    }

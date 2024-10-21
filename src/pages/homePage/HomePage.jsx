@@ -49,6 +49,9 @@ const handleLogout  = () =>{
 navigatetoLogin('/')
 }
 
+const createNewchat=()=>{
+  
+}
 
   return (
     <div className={styles.mainDivContainer}>
@@ -63,7 +66,7 @@ navigatetoLogin('/')
             </div>{" "}
             <br />
             <div className={styles.leftContNewChat}>
-              <button>New Chat</button>
+              <button onClick={createNewchat}>New Chat</button>
               <button onClick={navigateToQAApp}>Create Topic</button>
             </div>
           </div>

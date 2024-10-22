@@ -192,13 +192,21 @@ color: black;
     font-size: 45px;
 }
 .SubmitButton{
-    background-color: white;
+    /* background-color: white;
     padding: 10px 15px;
     border-radius: 10px;
     cursor: pointer;
     color: black;
     font-family: 29px;
-    border: 1px solid rgb(236, 241, 248);
+    border: 1px solid rgb(236, 241, 248); */
+
+    background-color: #fff;
+    padding: 15px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid rgb(236,241,248);
+    font-size: 16px;
+
    }
    .SubmitButton:hover{
 

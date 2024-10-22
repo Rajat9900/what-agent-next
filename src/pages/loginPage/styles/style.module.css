@@ -58,12 +58,12 @@
     border: 1px solid red;
     color: red;
    }
-   @supports (-webkit-overflow-scrolling: touch) {
+   /* @supports (-webkit-overflow-scrolling: touch) {
     .SubmitButton {
       color: black;
       background-color: white;
     }
-  }
+  } */
    .ErrorText{
     margin-top: -10px;
     color: red;

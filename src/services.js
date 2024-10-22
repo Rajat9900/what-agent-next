@@ -36,6 +36,31 @@ export const createNewTopics = (payload, token) => {
     },
   });
 };
+export const logout = (token) => {
+  return axios.post(api_url + "/logout", {}, {
+    headers: {
+      Authorization: `Bearer ${token}`, 
+    },
+  });
+};
 export const getPublicTopics = () => {
     return axios.get(`${api_url}topics/public`);
+  };
+
+  export const deleteChatSession = async (sessionId, token) => {
+    return axios.delete(`${api_url}/chats/${sessionId}` , {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  }
+
+
+  export const getChatMessages = async (sessionId, token) => {
+    return axios.get(`${api_url}/chats/${sessionId}/qna` , {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
   };

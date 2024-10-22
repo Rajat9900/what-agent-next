@@ -4,7 +4,6 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import styles from './styles/style.module.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 const SignUpPage = () => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();

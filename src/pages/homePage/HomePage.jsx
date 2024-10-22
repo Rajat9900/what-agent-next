@@ -3,7 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdDeleteOutline } from "react-icons/md";
-import { getAllChats, sendMessageToChat, createNewChat } from "../../services";
+import {
+  getAllChats,
+  sendMessageToChat,
+  createNewChat,
+  deleteChatSession,
+  getChatMessages,
+  logout,
+} from "../../services";
 import styles from "./styles/style.module.css";
 
 const HomePage = () => {
@@ -12,6 +19,7 @@ const HomePage = () => {
   const [isLeftContainerOpen, setIsLeftContainerOpen] = useState(true);
   const [chats, setChats] = useState([]);
   const [currentSessionId, setCurrentSessionId] = useState(null);
+  const [currentMessages, setCurrentMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
@@ -36,15 +44,14 @@ const HomePage = () => {
     try {
       const response = await createNewChat({}, token);
       if (response.status === 201) {
-        // const newChatIndex = chats.length + 1;
         const newChat = {
           session_id: response.data.session_id,
           label: response.data.label,
           messages: [],
         };
-
         setChats((prevChats) => [newChat, ...prevChats]);
         setCurrentSessionId(response.data.session_id);
+        setCurrentMessages([]);
       }
     } catch (error) {
       console.error("Error creating new chat:", error);
@@ -63,24 +70,8 @@ const HomePage = () => {
       );
 
       if (response.status === 200) {
-        setThinkingSubmit(true);
-        setChats((prevChats) =>
-          prevChats.map((chat) =>
-            chat.session_id === currentSessionId
-              ? {
-                  ...chat,
-                  messages: [
-                    ...chat.messages,
-                    {
-                      user_message: inputMessage,
-                      ai_response: response.data.answer,
-                      timestamp: new Date().toISOString(),
-                    },
-                  ],
-                }
-              : chat
-          )
-        );
+        setThinkingSubmit(false);
+       await loadChatMessages(currentSessionId) 
         setInputMessage("");
       }
     } catch (error) {
@@ -90,34 +81,51 @@ const HomePage = () => {
     }
   };
 
-  const deleteChat = (sessionId) => {
-    setChats(chats.filter((chat) => chat.session_id !== sessionId));
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setSmShow(false);
+  const handleDeleteChat = async (sessionId) => {
+    try {
+      await deleteChatSession(sessionId, token);
+      setChats((prevChats) =>
+        prevChats.filter((chat) => chat.session_id !== sessionId)
+      );
+      if (currentSessionId === sessionId) {
+        setCurrentSessionId(null);
+        setCurrentMessages([]);
       }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownRef]);
-
-  const toggleLeftContainer = () => {
-    setIsLeftContainerOpen(!isLeftContainerOpen);
+    } catch (error) {
+      console.error("Error deleting chat session:", error);
+    }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
+  const loadChatMessages = async (sessionId) => {
+    try {
+      const messages = await getChatMessages(sessionId, token);
+      console.log(messages , "message of qna")
+      setCurrentMessages(messages.data.qna);
+
+      setCurrentSessionId(sessionId);
+    } catch (error) {
+      console.error("Error fetching chat messages:", error);
+    }
   };
 
-  const currentChat = chats.find(
-    (chat) => chat.session_id === currentSessionId
-  );
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.log("No token found. Please log in first.");
+      return;
+    }
+    try {
+      const response = await logout(token);
+      if (response.status === 200) {
+        localStorage.removeItem("token");
+        console.log(response, "logout");
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error, "error during logout");
+    }
+  };
 
   return (
     <div className={styles.mainDivContainer}>
@@ -127,9 +135,6 @@ const HomePage = () => {
         }`}
       >
         <div className={styles.leftSubContainer}>
-          <div>
-            {/* <p>Logged in as Ranjana</p> */}
-          </div>
           <div className={styles.upperDiv}>
             <div onClick={handleLogout}>
               <button>Logout</button>
@@ -140,7 +145,6 @@ const HomePage = () => {
               <button onClick={() => navigate("/qaApp")}>Create Topic</button>
             </div>
           </div>
-          <div className={styles.middleDiv}></div>
           <div className={styles.lowerDiv}>
             <h3>Chats</h3>
             <div
@@ -148,19 +152,22 @@ const HomePage = () => {
             >
               {chats.map((chat) => (
                 <div key={chat.session_id} className={styles.newChatCreatedDiv}>
-                  <button onClick={() => setCurrentSessionId(chat.session_id)}>
+                  <button onClick={() => loadChatMessages(chat.session_id)}>
                     {chat.label}
                   </button>
-                  {/* <MdDeleteOutline
-                    onClick={() => deleteChat(chat.session_id)}
+                  <MdDeleteOutline
+                    onClick={() => handleDeleteChat(chat.session_id)}
                     style={{ fontSize: "24px" }}
-                  /> */}
+                  />
                 </div>
               ))}
             </div>
           </div>
         </div>
-        <div className={styles.toggleIcon} onClick={toggleLeftContainer}>
+        <div
+          className={styles.toggleIcon}
+          onClick={() => setIsLeftContainerOpen(!isLeftContainerOpen)}
+        >
           {isLeftContainerOpen ? <IoIosArrowBack /> : <IoIosArrowForward />}
         </div>
       </div>
@@ -189,9 +196,9 @@ const HomePage = () => {
               </button>
             </div>
           </div>
-          {currentChat && (
+          {currentMessages && (
             <div className={styles.formDetails1}>
-              {currentChat.messages.map((message, index) => (
+              {currentMessages.slice().reverse().map((message, index) => (
                 <div key={index} className={styles.formDetails1}>
                   <div className={styles.inputfieldDiv1}>
                     <p>
@@ -208,9 +215,8 @@ const HomePage = () => {
             </div>
           )}
         </form>
-
-        {/* Three Dots Menu */}
       </div>
+
       <div className={styles.threeDotsMainDiv}>
         <BsThreeDotsVertical onClick={() => setSmShow(!smShow)} />
         {smShow && (

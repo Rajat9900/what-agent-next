@@ -6,22 +6,22 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-const Login = () => {
+const Login = (props) => {
   const { register, handleSubmit,  formState: { errors } } = useForm();
   const [showPassword, setShowPassword] = useState(false);
 
   const navigatetoHome = useNavigate()
 
-  const onSubmit = async(data) => {
+  const onSubmit = async (data) => {
     try {
       const response = await axios.post('https://backendsharebrain.whatagent.net/login', data); 
       localStorage.setItem('token', response.data.access_token);
-      console.log(response.data.access_token, "response token of Login")
+      console.log(response.data.access_token, "response token of Login");
+      props.onLogin();  // Call the onLogin prop function
       navigatetoHome('/homePage');  
     } catch (error) {
-     alert(error.response?.data?.error || 'Login failed');
+      alert(error.response?.data?.error || 'Login failed');
     }
- 
   };
   const navigate = useNavigate()
   const naviagteToSignUp = () =>{
@@ -73,4 +73,3 @@ navigate('/signUp')
 };
 
 export default Login;
-

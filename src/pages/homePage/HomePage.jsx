@@ -13,7 +13,7 @@ import {
 } from "../../services";
 import styles from "./styles/style.module.css";
 
-const HomePage = () => {
+const HomePage = (props) => {
   const [thinkingSubmit, setThinkingSubmit] = useState(false);
   const [smShow, setSmShow] = useState(false);
   const [isLeftContainerOpen, setIsLeftContainerOpen] = useState(true);
@@ -118,8 +118,7 @@ const HomePage = () => {
     try {
       const response = await logout(token);
       if (response.status === 200) {
-        localStorage.removeItem("token");
-        console.log(response, "logout");
+        props.onLogout();  // Call the onLogout prop function
         navigate("/");
       }
     } catch (error) {

@@ -1,16 +1,20 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styles from "../../signupPage/styles/style.module.css";
 import { MdOutlineCloudUpload } from "react-icons/md";
 import { getPublicTopics, createNewTopics } from "../../../services"; 
+import { Link, useNavigate } from "react-router-dom";
 
 const QAApp = () => {
   const [publicTopics, setPublicTopics] = useState([]); 
   const [newTopic, setNewTopic] = useState(""); 
   const [loading, setLoading] = useState(false);
+  const [isExistingTopic, setIsExistingTopic] = useState(false); 
+  const [selectedSessionId, setSelectedSessionId] = useState(null);
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const navigate = useNavigate();
 
+  const { register, handleSubmit, watch, formState: { errors }, resetField } = useForm();
 
   useEffect(() => {
     getPublicTopics()
@@ -21,32 +25,62 @@ const QAApp = () => {
         console.error("Error fetching public topics:", error);
       });
   }, []);
-
+ 
 
   const onSubmit = (data) => {
-    const token = localStorage.getItem("token") 
-    const payload = new FormData();
-    payload.append("topic_name", data.topicDesc); 
-    payload.append("is_private", data.isPrivate || false); 
-    if (data.shareCode) {
-      payload.append("share_code", data.shareCode); 
-    }
-    if (data.document && data.document[0]) {
-      payload.append("file", data.document[0]); 
-    }
+    if (isExistingTopic) {
+      console.log("Selected existing topic:", newTopic);
+
+      navigate('/homepage', {
+        state: { topicName: newTopic, sessionId: selectedSessionId }
+      });
+    } else {
+
+      console.log("New topic:", data.topicDesc);
+
+      const token = localStorage.getItem("token"); 
+      const payload = new FormData();
+      payload.append("topic_name", data.topicDesc); 
+      payload.append("is_private", data.isPrivate || false); 
+      if (data.shareCode) {
+        payload.append("share_code", data.shareCode); 
+      }
+      if (data.document && data.document[0]) {
+        payload.append("file", data.document[0]); 
+      }
 
       setLoading(true);
     
-    createNewTopics(payload, token)
-      .then((response) => {
-        setPublicTopics((prevTopics) => [...prevTopics, data.topicDesc]); 
-        setNewTopic(data.topicDesc); 
-        console.log(response.data.message); 
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error creating new topic:", error); 
-      })
+      createNewTopics(payload, token)
+        .then((response) => {
+          setPublicTopics((prevTopics) => [...prevTopics, data.topicDesc]); 
+          setNewTopic(data.topicDesc); 
+          console.log(response.data.message); 
+          setLoading(false);
+          navigate('/nextComponent', {
+            state: { topicName: data.topicDesc, sessionId: null }
+          });
+        })
+        .catch((error) => {
+          console.error("Error creating new topic:", error); 
+          setLoading(false);
+        });
+    }
+  };
+
+  const handleTopicSelection = (e) => {
+    const selectedTopic = e.target.value;
+    setNewTopic(selectedTopic);
+
+    if (selectedTopic) {
+      setIsExistingTopic(true);
+      resetField("topicDesc");
+      const sessionId = publicTopics.find(topic => topic === selectedTopic)?.session_id || 'mock-session-id';
+      setSelectedSessionId(sessionId); 
+    } else {
+      setIsExistingTopic(false);
+      setSelectedSessionId(null);
+    }
   };
 
   return (
@@ -57,8 +91,9 @@ const QAApp = () => {
         <div className={styles.formContainer2}>
          
           <div className={styles.FormGroup}>
-            <label>Select an existing topic (optional):</label>
-            <select className={styles.InputField} defaultValue={newTopic}>
+            <label>Select a Topic</label>
+            <select className={styles.InputField} onChange={handleTopicSelection} value={newTopic}>
+              <option value="">Select an existing topic</option>
               {publicTopics.length > 0 ? (
                 publicTopics.map((topic, index) => (
                   <option key={index} value={topic}>
@@ -78,9 +113,10 @@ const QAApp = () => {
               type="text"
               maxLength={35}
               {...register("topicDesc", {
-                required: "Topic description is required",
+                required: !isExistingTopic ? "Topic is required" : false,
               })}
               className={styles.InputField}
+              disabled={isExistingTopic}
             />
             <span className={styles.absoluteMaxLength}>0/35</span>
             {errors.topicDesc && (
@@ -89,13 +125,22 @@ const QAApp = () => {
           </div>
 
           <div className={styles.FormGroup1}>
-            <input type="checkbox" {...register("isPrivate")} />
+            <input
+              type="checkbox"
+              {...register("isPrivate")}
+              disabled={isExistingTopic}
+            />
             <label>Set as Private Topic</label>
           </div>
 
           <div className={styles.FormGroup}>
             <label>Or enter a share code to access a shared private topic:</label>
-            <input type="text" {...register("shareCode")} className={styles.InputField} />
+            <input
+              type="text"
+              {...register("shareCode")}
+              className={styles.InputField}
+              disabled={isExistingTopic}
+            />
           </div>
 
           <div className={styles.FormGroup}>
@@ -116,6 +161,7 @@ const QAApp = () => {
                 className={styles.inputField3}
                 id="fileUpload"
                 accept=".pdf,.docx"
+                disabled={isExistingTopic}
               />
               <label htmlFor="fileUpload" className={styles.browseFiles}>
                 Browse files
@@ -124,12 +170,12 @@ const QAApp = () => {
           </div>
 
           <div className={styles.btnForm1}>
-          <button type="submit" className={styles.SubmitButton} disabled={loading}>
+            <button type="submit" className={styles.SubmitButton} disabled={loading}>
               {loading ? "Submitting..." : "Submit Topic"}
             </button>
-            <button type="button" className={styles.SubmitButton}>
+            <Link to={'./homePage'} className={styles.SubmitButton}>
               Cancel
-            </button>
+            </Link>
           </div>
         </div>
       </form>

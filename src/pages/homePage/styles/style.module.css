@@ -30,7 +30,7 @@ opacity: none;
   width: 40px; /* Width when closed */
 }
 .RightContainer{
-width: 55%;
+width: 67%;
   display: flex;
   justify-content: center;
   transition: width 0.3s ease;
@@ -87,7 +87,7 @@ width: 55%;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-
+gap: 5px;
   /* justify-content: ; */
 }
 
@@ -96,7 +96,15 @@ width: 55%;
   padding: 7px 10px;
   border-radius: 10px;
   cursor: pointer;
-
+  border: 1px solid rgb(168, 173, 179);
+}
+.upperDiv select {
+  background-color: white;
+  padding: 7px 10px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
   border: 1px solid rgb(168, 173, 179);
 }
 .upperDiv button:hover {
@@ -218,6 +226,35 @@ color: black;
     position: relative; 
     margin-top: 30px;
     cursor: pointer;
+  }
+  .chatHistoryReset{
+display: flex;
+flex-direction: column;
+padding: 50px 10px;
+  }
+  .chatHistoryReset p{
+    padding: 20px 10px;
+    color: rgb(146, 108, 5);
+  background-color: rgba(255, 227, 18, 0.1);
+  border-radius: 0.5rem;
+  }
+  .chatHistoryResetSecondDiv{
+    display: flex;
+    justify-content: space-between;
+  }
+  .chatHistoryResetSecondDiv button{
+      background-color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: black;
+    font-family: 29px;
+    border: 1px solid rgb(236, 241, 248);
+  }
+  .chatHistoryResetSecondDiv button:hover{
+    color: red;
+    border: 1px solid red;
+    
   }
   
   .customDropdown {

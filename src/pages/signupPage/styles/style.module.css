@@ -173,6 +173,8 @@
     padding: 13px 19px;
     border-radius: 10px;
     cursor: pointer;
+    color: black;
+    text-decoration: none;
     border: 1px solid rgb(236, 241, 248);
    }
    

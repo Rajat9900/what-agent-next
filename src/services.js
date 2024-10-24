@@ -9,6 +9,26 @@ export const getAllChats = (token) => {
     },
   });
 };
+export const getAllChatsForTopic = (topic_name, token) => {
+  return axios.get(
+    api_url + `topics/${topic_name}/chats`,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+};
+export const fetchPreviousChatSessions = (token) => {
+  return axios.get(
+    api_url + `chats/sessions`,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+};
 
 export const sendMessageToChat = (session_id, question, token) => {
   return axios.post(
@@ -23,6 +43,8 @@ export const sendMessageToChat = (session_id, question, token) => {
 };
 
 export const createNewChat = (payload, token) => {
+
+  console.log({payload})
   return axios.post(api_url + "create-chat", payload, {
     headers: {
       Authorization: "Bearer " + token,

@@ -55,7 +55,11 @@ const HomePage = (props) => {
 
   const handleNewChat = async () => {
     try {
-      const response = await createNewChat({}, token);
+      let payload={}
+      if(topicName){
+        payload['topic_name']=topicName
+      }
+      const response = await createNewChat(payload, token);
       if (response.status === 201) {
         const newChat = {
           session_id: response.data.session_id,

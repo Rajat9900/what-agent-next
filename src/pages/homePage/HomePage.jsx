@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef ,  } from "react";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdDeleteOutline } from "react-icons/md";
@@ -14,8 +14,6 @@ import {
 } from "../../services";
 import styles from "./styles/style.module.css";
 
-
-
 const HomePage = (props) => {
   const [thinkingSubmit, setThinkingSubmit] = useState(false);
   const [smShow, setSmShow] = useState(false);
@@ -29,28 +27,31 @@ const HomePage = (props) => {
   const token = localStorage.getItem("token");
 
   const location = useLocation();
-  const topicName = location.state?.topicName 
-  const sessionIdName = location.state?.sessionId
+  const topicName = location.state?.topicName;
+  const sessionIdName = location.state?.sessionId;
   useEffect(() => {
     const fetchChatsHistory = async () => {
       try {
-        const response = await getAllChats(token);
-        await getAllChatsForTopic(topicName )
-        if (response.status === 200) {
-          setChats(response.data.chats);
+        if (topicName) {
+          handleChatTopic();
+        } else {
+          const response = await getAllChats(token);
+
+          if (response.status === 200) {
+            setChats(response.data.chats);
+          }
         }
       } catch (error) {
         console.error("Error fetching chat history:", error);
       }
     };
-   
 
     fetchChatsHistory();
-  }, [token,topicName ]);
+  }, [token, topicName]);
 
   useEffect(() => {
     console.log("Topic Name from QAApp:", topicName);
-  }, [topicName])
+  }, [topicName]);
 
   const handleNewChat = async () => {
     try {
@@ -71,6 +72,7 @@ const HomePage = (props) => {
   };
 
   const handleSendMessage = async () => {
+    console.log("hhh9i",currentSessionId)
     if (!currentSessionId || inputMessage.trim() === "") return;
     setThinkingSubmit(true);
 
@@ -82,10 +84,10 @@ const HomePage = (props) => {
       );
 
       if (response.status === 200) {
-        console.log(response , "response of chat message")
+        console.log(response, "response of chat message");
         setThinkingSubmit(false);
-       await loadChatMessages(currentSessionId) 
-       await getAllChatsForTopic(topicName, token)
+        await loadChatMessages(currentSessionId);
+        await getAllChatsForTopic(topicName, token);
         setInputMessage("");
       }
     } catch (error) {
@@ -95,15 +97,15 @@ const HomePage = (props) => {
     }
   };
 
-const handleChatTopic = async() => {
-try {
-  const chatTopic = await getAllChatsForTopic(topicName, token)
-  console.log(chatTopic.chats , "chatTopic.chats.messages")
-  setCurrentMessages(chatTopic.chats.messages);
-}catch (error) {
-  console.error("Error fetching topic chats", error);
-}
-}
+  const handleChatTopic = async () => {
+    try {
+      const chatTopic = await getAllChatsForTopic(topicName, token);
+      console.log(chatTopic.chats, "chatTopic.chats.messages");
+      setChats(chatTopic.data.chats);
+    } catch (error) {
+      console.error("Error fetching topic chats", error);
+    }
+  };
 
   const handleDeleteChat = async (sessionId) => {
     try {
@@ -122,10 +124,12 @@ try {
 
   const loadChatMessages = async (sessionId) => {
     try {
-      const messages = await getChatMessages(sessionId, token);
-      console.log(messages , "message of qna")
-      setCurrentMessages(messages.data.qna);
+      console.log(sessionId)
       setCurrentSessionId(sessionId);
+      const messages = await getChatMessages(sessionId, token);
+      console.log(messages, "message of qna");
+      setCurrentMessages(messages.data.qna);
+      
     } catch (error) {
       console.error("Error fetching chat messages:", error);
     }
@@ -141,7 +145,7 @@ try {
     try {
       const response = await logout(token);
       if (response.status === 200) {
-        props.onLogout();  
+        props.onLogout();
         navigate("/");
       }
     } catch (error) {
@@ -157,27 +161,27 @@ try {
         }`}
       >
         <div className={styles.leftSubContainer}>
-        <div className={styles.chatHistoryReset}>
-        <p>Are you sure you want to start a new topic? This will reset your chat history.</p>
-        <div className={styles.chatHistoryResetSecondDiv}>
-          <button>Yes</button>
-          <button>Cancel</button>
-        </div>
-      </div>
+          <div className={styles.chatHistoryReset}>
+            <p>
+              Are you sure you want to start a new topic? This will reset your
+              chat history.
+            </p>
+            <div className={styles.chatHistoryResetSecondDiv}>
+              <button>Yes</button>
+              <button>Cancel</button>
+            </div>
+          </div>
           <div className={styles.upperDiv}>
             <div onClick={handleLogout}>
               <button>Logout</button>
             </div>
             <br />
             <div className={styles.leftContNewChat}>
-              <button onClick={handleNewChat}
-              disabled={topicName}
-              
-              >New Chat</button>
+              <button onClick={handleNewChat} >
+                New Chat
+              </button>
 
-                <button onClick={() => navigate("/qaApp")}>Create topic</button>
-               
-        
+              <button onClick={() => navigate("/qaApp")}>Create topic</button>
             </div>
           </div>
           <div className={styles.lowerDiv}>
@@ -185,33 +189,22 @@ try {
             <div
               style={{ display: "flex", flexDirection: "column", gap: "10px" }}
             >
-             {topicName ? (
-                <>
-                  
-                    <div  className={styles.newChatCreatedDiv}>
-                      <button onClick={handleChatTopic}>
-                      {topicName}
-                        </button>
-                     <MdDeleteOutline
-                    onClick={() => handleDeleteChat(topicName.session_id)}
-                         style={{ fontSize: "24px" }}
-                   />
-                    </div>
-                </>
-               ) : (
-  chats.map((chat) => (
-                  <div key={chat.session_id} className={styles.newChatCreatedDiv}>
-                      <button onClick={() => loadChatMessages(chat.session_id)}>
-                        {chat.label}
-                        </button>
-                     <MdDeleteOutline
-                    onClick={() => handleDeleteChat(chat.session_id)}
-                         style={{ fontSize: "24px" }}
-                   />
-                    </div>
-                 ))
-                  )}
-             
+              {
+                chats.map((chat) => (
+                  <div
+                    key={chat.session_id}
+                    className={styles.newChatCreatedDiv}
+                  >
+                    <button onClick={() => loadChatMessages(chat.session_id)}>
+                      {chat.label}
+                    </button>
+                    <MdDeleteOutline
+                      onClick={() => handleDeleteChat(chat.session_id)}
+                      style={{ fontSize: "24px" }}
+                    />
+                  </div>
+                ))
+              }
             </div>
           </div>
         </div>
@@ -249,20 +242,23 @@ try {
           </div>
           {currentMessages && (
             <div className={styles.formDetails1}>
-              {currentMessages.slice().reverse().map((message, index) => (
-                <div key={index} className={styles.formDetails1}>
-                  <div className={styles.inputfieldDiv1}>
-                    <p>
-                      <strong>You:</strong> {message.user_message}
-                    </p>
+              {currentMessages
+                .slice()
+                .reverse()
+                .map((message, index) => (
+                  <div key={index} className={styles.formDetails1}>
+                    <div className={styles.inputfieldDiv1}>
+                      <p>
+                        <strong>You:</strong> {message.user_message}
+                      </p>
+                    </div>
+                    <div className={styles.inputfieldDiv2}>
+                      <p>
+                        <strong>AI:</strong> {message.ai_response}
+                      </p>
+                    </div>
                   </div>
-                  <div className={styles.inputfieldDiv2}>
-                    <p>
-                      <strong>AI:</strong> {message.ai_response}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           )}
         </form>

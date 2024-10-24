@@ -59,7 +59,7 @@ export const createNewTopics = (payload, token) => {
   });
 };
 export const logout = (token) => {
-  return axios.post(api_url + "/logout", {}, {
+  return axios.post(api_url + "logout", {}, {
     headers: {
       Authorization: `Bearer ${token}`, 
     },
@@ -70,7 +70,7 @@ export const getPublicTopics = () => {
   };
 
   export const deleteChatSession = async (sessionId, token) => {
-    return axios.delete(`${api_url}/chats/${sessionId}` , {
+    return axios.delete(`${api_url}chats/${sessionId}` , {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -79,10 +79,11 @@ export const getPublicTopics = () => {
 
 
   export const getChatMessages = async (sessionId, token) => {
-    return axios.get(`${api_url}/chats/${sessionId}/qna` , {
+    return axios.get(`${api_url}chats/${sessionId}/qna` , {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
 
   };
+
